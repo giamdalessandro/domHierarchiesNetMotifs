@@ -1,4 +1,5 @@
 .vscode/
 DomWorld_Legacy.exe
 output.config.txt
+output.R
 *.csv

@@ -1,11 +1,19 @@
 import os
+import configparser
 import numpy as np
-import matplotlib.pyplot as plt
 import pandas as pd
+import matplotlib.pyplot as plt
 import networkx as nx
 
-N_IND = 8
+# Reading the number of individuas from the config file
+config = configparser.ConfigParser()
+config.read('Config_domHierarchies.ini')
+
+N_IND = int(config['default']['NumFemales'][0]) + int(config['default']['NumMales'][0]) 
 dom_mat = np.zeros((N_IND,N_IND))
+
+# unify output files of different runs
+os.system('Rscript outputF.R')
 
 # Reading data from DomWorld output 
 data = pd.read_csv('./FILENAME.csv', usecols=['run','period','actor.id','actor.sex','actor.behavior','actor.score',
@@ -16,7 +24,7 @@ print(df_attacks)
 
 
 # Count the number of wins in each dyad:
-#   dom_mat[i][j] <- n. of times i wins over j 
+#   dom_mat[r][c] <- n. of times r wins over c 
 for idx in df_attacks.index:
 	act_idx = int(df_attacks['actor.id'][idx]) - 1                   # domMatrix attacker index (row)
 	recv_idx = int(df_attacks['receiver.id'][idx]) - 1               # domMatrix receiver index (col)
@@ -80,5 +88,5 @@ for k,v in sorted(census.items()):
 		print('  ' + triad_cfg[k] + ': ' + str(v))
 	
 
-nx.draw(net_G, with_labels=True, font_weight='bold')
-plt.show()
+#nx.draw(net_G, with_labels=True, font_weight='bold')
+#plt.show()
