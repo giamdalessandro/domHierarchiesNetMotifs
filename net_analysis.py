@@ -9,7 +9,7 @@ dom_mat = np.zeros((N_IND,N_IND))
 
 # Reading data from DomWorld output 
 data = pd.read_csv('./FILENAME.csv', usecols=['run','period','actor.id','actor.sex','actor.behavior','actor.score',
-                                              'receiver.id','receiver.sex','receiver.behavior','receiver.score'])
+                                              'receiver.id','receiver.sex','receiver.behavior','receiver.score'], sep=';')
 
 df_attacks = data.query('`actor.behavior` == "Fight" | `actor.behavior` == "Flee"')
 print(df_attacks)
@@ -77,7 +77,7 @@ f_census = {}
 for k,v in sorted(census.items()):
 	if k in triad_cfg:
 		f_census[triad_cfg[k]] = v
-		print(triad_cfg[k] + ': ' + str(v))
+		print('  ' + triad_cfg[k] + ': ' + str(v))
 	
 
 nx.draw(net_G, with_labels=True, font_weight='bold')
