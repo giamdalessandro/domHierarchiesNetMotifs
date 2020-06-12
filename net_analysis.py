@@ -1,27 +1,15 @@
 import os
-import configparser as cp
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import networkx as nx
+from utils import individuals_number, unify_runs_output
 
-# Reading the number of individuas from the config file
-with open('Config_domHierarchies.ini') as f:
-    file_content = '[default]\n' + f.read()
-f.close()
-
-cfgp = cp.ConfigParser()
-cfgp.read_string(file_content)
-
-N_IND = int(cfgp['default']['NumFemales'][0]) + int(cfgp['default']['NumMales'][0]) 
+N_IND = individuals_number('Config_domHierarchies.ini')
 dom_mat = np.zeros((N_IND,N_IND))
 
-# unify output files of different runs
-import rpy2.robjects as robjects
-r = robjects.r
-r.source('outputF.R')
-
 # Reading data from DomWorld output 
+unify_runs_output()  # unify different runs output files
 data = pd.read_csv('FILENAME.csv', usecols=['run','period','actor.id','actor.sex','actor.behavior','actor.score',
                                               'receiver.id','receiver.sex','receiver.behavior','receiver.score'], sep=';')
 

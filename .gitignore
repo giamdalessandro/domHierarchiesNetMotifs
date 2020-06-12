@@ -1,4 +1,5 @@
 .vscode/
+__pycache__/
 DomWorld_Legacy.exe
 output.config.txt
 outputF.py
