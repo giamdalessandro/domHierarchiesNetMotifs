@@ -9,7 +9,7 @@ N_IND = individuals_number('Config_domHierarchies.ini')
 dom_mat = np.zeros((N_IND,N_IND))
 
 # Reading data from DomWorld output 
-unify_runs_output()  # unify different runs output files
+unify_runs_output('FILENAME.csv')  # unify different runs output files
 data = pd.read_csv('FILENAME.csv', usecols=['run','period','actor.id','actor.sex','actor.behavior','actor.score',
                                               'receiver.id','receiver.sex','receiver.behavior','receiver.score'], sep=';')
 

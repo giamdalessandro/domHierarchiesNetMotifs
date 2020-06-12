@@ -15,7 +15,7 @@ def individuals_number(cfg_file):
 	return int(cp['default']['NumFemales'][0]) + int(cp['default']['NumMales'][0]) 
 
 # unify output files of different runs output files
-def unify_runs_output():
+def unify_runs_output(f_name):
     out_files = []
     for f in os.listdir('.'):
         if 'output' and '.csv' in f and 'F' not in f:
@@ -29,4 +29,4 @@ def unify_runs_output():
         l.append(df)
 
     frame = pd.concat(l, axis=0, ignore_index=True)
-    frame.to_csv('FILENAME.csv', sep=';', na_rep='NA', decimal='.')
+    frame.to_csv(f_name, sep=';', na_rep='NA', decimal='.')
