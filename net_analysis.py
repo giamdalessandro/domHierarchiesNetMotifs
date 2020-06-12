@@ -8,8 +8,8 @@ import networkx as nx
 # Reading the number of individuas from the config file
 with open('Config_domHierarchies.ini') as f:
     file_content = '[default]\n' + f.read()
-
 f.close()
+
 cfgp = cp.ConfigParser()
 cfgp.read_string(file_content)
 
@@ -17,18 +17,20 @@ N_IND = int(cfgp['default']['NumFemales'][0]) + int(cfgp['default']['NumMales'][
 dom_mat = np.zeros((N_IND,N_IND))
 
 # unify output files of different runs
+#os.system('python3 outputF.py')
 os.system('Rscript outputF.R')
 
 # Reading data from DomWorld output 
 data = pd.read_csv('FILENAME.csv', usecols=['run','period','actor.id','actor.sex','actor.behavior','actor.score',
                                               'receiver.id','receiver.sex','receiver.behavior','receiver.score'], sep=';')
 
+# selecting the rows representing dominance interactions
 df_attacks = data.query('`actor.behavior` == "Fight" | `actor.behavior` == "Flee"')
 print(df_attacks)
 
 
 # Create contest matrix from raw interaction data
-# Count the number of wins in each dyad:
+# counting the number of wins in each dyad:
 #   dom_mat[r][c] <- n. of times r wins over c 
 for idx in df_attacks.index:
 	act_idx = int(df_attacks['actor.id'][idx]) - 1                   # domMatrix attacker index (row)
@@ -39,12 +41,12 @@ for idx in df_attacks.index:
 	elif df_attacks['actor.behavior'][idx] == "Flee":                # receiver wins
 		dom_mat[recv_idx][act_idx] += 1
 
-print('\nNumber of wins matrix:')
+print('\nContest matrix:')
 print(dom_mat)
 
 
-# create dominance matrix;
-#   dom_mat[r][c] is equal to:
+# create dominance matrix,
+# dom_mat[r][c] is equal to:
 #     - 1 -> r dominates c
 #     - 0 -> c dominates r
 #     - 0.5 -> equal number of wins
