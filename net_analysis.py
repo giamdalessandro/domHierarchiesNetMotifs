@@ -1,28 +1,33 @@
 import os
-import configparser
+import configparser as cp
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import networkx as nx
 
 # Reading the number of individuas from the config file
-config = configparser.ConfigParser()
-config.read('Config_domHierarchies.ini')
+with open('Config_domHierarchies.ini') as f:
+    file_content = '[default]\n' + f.read()
 
-N_IND = int(config['default']['NumFemales'][0]) + int(config['default']['NumMales'][0]) 
+f.close()
+cfgp = cp.ConfigParser()
+cfgp.read_string(file_content)
+
+N_IND = int(cfgp['default']['NumFemales'][0]) + int(cfgp['default']['NumMales'][0]) 
 dom_mat = np.zeros((N_IND,N_IND))
 
 # unify output files of different runs
 os.system('Rscript outputF.R')
 
 # Reading data from DomWorld output 
-data = pd.read_csv('./FILENAME.csv', usecols=['run','period','actor.id','actor.sex','actor.behavior','actor.score',
+data = pd.read_csv('FILENAME.csv', usecols=['run','period','actor.id','actor.sex','actor.behavior','actor.score',
                                               'receiver.id','receiver.sex','receiver.behavior','receiver.score'], sep=';')
 
 df_attacks = data.query('`actor.behavior` == "Fight" | `actor.behavior` == "Flee"')
 print(df_attacks)
 
 
+# Create contest matrix from raw interaction data
 # Count the number of wins in each dyad:
 #   dom_mat[r][c] <- n. of times r wins over c 
 for idx in df_attacks.index:
