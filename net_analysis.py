@@ -17,8 +17,9 @@ N_IND = int(cfgp['default']['NumFemales'][0]) + int(cfgp['default']['NumMales'][
 dom_mat = np.zeros((N_IND,N_IND))
 
 # unify output files of different runs
-#os.system('python3 outputF.py')
-os.system('Rscript outputF.R')
+import rpy2.robjects as robjects
+r = robjects.r
+r.source('outputF.R')
 
 # Reading data from DomWorld output 
 data = pd.read_csv('FILENAME.csv', usecols=['run','period','actor.id','actor.sex','actor.behavior','actor.score',
@@ -31,7 +32,7 @@ print(df_attacks)
 
 # Create contest matrix from raw interaction data
 # counting the number of wins in each dyad:
-#   dom_mat[r][c] <- n. of times r wins over c 
+#     dom_mat[r][c] <- n. of times r wins over c 
 for idx in df_attacks.index:
 	act_idx = int(df_attacks['actor.id'][idx]) - 1                   # domMatrix attacker index (row)
 	recv_idx = int(df_attacks['receiver.id'][idx]) - 1               # domMatrix receiver index (col)
@@ -45,8 +46,7 @@ print('\nContest matrix:')
 print(dom_mat)
 
 
-# create dominance matrix,
-# dom_mat[r][c] is equal to:
+# create dominance matrix, dom_mat[r][c] is equal to:
 #     - 1 -> r dominates c
 #     - 0 -> c dominates r
 #     - 0.5 -> equal number of wins
