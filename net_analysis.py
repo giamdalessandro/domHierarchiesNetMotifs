@@ -6,15 +6,15 @@ import networkx as nx
 from utils import set_domWorld_cfg, unify_runs_output
 
 params = {
-	'InitialDensity' :  [1.7],
-	'NumFemales' : [4],                         # 4, 6, 9, 15, 20
-	'NumMales' : [4],                           # 4, 6, 9, 15, 20
-	'Rating.Dom.female.Intensity' : [0.1],      # eg: 0.1  desp: 0.8
-	'Rating.Dom.male.Intensity' : [0.2],        # eg: 0.2  desp: 1.0
-	'female.PersSpace' : [2.0],
-	'female.FleeDist' : [2.0],
-	'male.PersSpace' : [2.0],
-	'male.FleeDist' : [2.0]
+	'InitialDensity' :  1.7,
+	'NumFemales' : 4,                         # 4, 6, 9, 15, 20
+	'NumMales' : 4,                           # 4, 6, 9, 15, 20
+	'Rating.Dom.female.Intensity' : 0.1,      # eg: 0.1  desp: 0.8
+	'Rating.Dom.male.Intensity' : 0.2,        # eg: 0.2  desp: 1.0
+	'female.PersSpace' : 2.0,
+	'female.FleeDist' : 2.0,
+	'male.PersSpace' : 2.0,
+	'male.FleeDist' : 2.0
 }
 
 set_domWorld_cfg('Config_domHierarchies.ini',params)
@@ -31,7 +31,7 @@ df_attacks = data.query('`actor.behavior` == "Fight" | `actor.behavior` == "Flee
 #print(df_attacks)
 
 
-N_IND = int(params['NumFemales'][0]) + int(params['NumMales'][0])
+N_IND = int(params['NumFemales']) + int(params['NumMales'])
 dom_mat = np.zeros((N_IND,N_IND))
 
 # Create contest matrix from raw interaction data
@@ -94,12 +94,12 @@ triad_cfg = {
 print('\nNetwork Triadic Census:')
 f_census = {}
 f_census['group-size'] = [N_IND]
-f_census['flee-dist'] = params['female.FleeDist']
-f_census['aggr-intensity'] = [('mild' if params['Rating.Dom.female.Intensity'][0] == 0.1 else 'fierce')]
+f_census['flee-dist'] = [params['female.FleeDist']]
+f_census['aggr-intensity'] = [('mild' if params['Rating.Dom.female.Intensity'] == 0.1 else 'fierce')]
 
 for k,v in sorted(census.items()):
 	if k in triad_cfg:
-		f_census[triad_cfg[k]] = v
+		f_census[triad_cfg[k]] = [v]
 		print('  ' + triad_cfg[k] + ': ' + str(v))
 	
 

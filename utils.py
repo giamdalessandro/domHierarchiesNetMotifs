@@ -12,7 +12,7 @@ def set_domWorld_cfg(filename,  params):
 		for row in f.readlines():
 			for k in params.keys():
 				if k in row:
-					row = k + ' = {}'.format(params[k][0]) + '\t' + row[row.find('#'):]
+					row = k + ' = {}'.format(params[k]) + '\t' + row[row.find('#'):]
 					break
 
 			new_cfg.append(row)
@@ -52,7 +52,7 @@ def individuals_number(cfg_file):
 	cp = configparser.ConfigParser()
 	cp.read_string(file_content)
 
-	return int(cp['default']['NumFemales'][0]) + int(cp['default']['NumMales'][0])
+	return int(cp['default']['NumFemales']) + int(cp['default']['NumMales'])
 
 
 # plot the dominance network as a graph
