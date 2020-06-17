@@ -8,10 +8,11 @@ def set_domWorld_cfg(filename,  params):
 	new_cfg = []
 	with open(filename, 'r') as f:
 		for row in f.readlines():
-			if 'NumFemales' in row: 
-				row = 'NumFemales = {}              # number of females in the simulation in Proc Roy\n'.format(params['NumFemales'])
-			elif 'NumMales' in row:
-				row = 'NumMales = {}                # number of males in the simulation in Proc Roy\n'.format(params['NumMales'])
+			for k in params.keys():
+				if k in row:
+					row = k + ' = {}'.format(params[k][0]) + '\t' + row[row.find('#'):]
+					break
+
 			new_cfg.append(row)
 		f.close()
 
