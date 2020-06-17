@@ -7,14 +7,14 @@ from utils import set_domWorld_cfg, unify_runs_output
 
 params = {
 	'InitialDensity' :  [1.7],
-	'NumFemales' : [6],
-	'NumMales' : [6],
-	'Rating.Dom.female.Intensity' : [0.1],      # eg: 0.1  desp: 0.8
-	'Rating.Dom.male.Intensity' : [0.2],        # eg: 0.2  desp: 1.0
+	'NumFemales' : [15],                         # 4, 6, 9, 15, 20
+	'NumMales' : [15],                           # 4, 6, 9, 15, 20
+	'Rating.Dom.female.Intensity' : [0.8],      # eg: 0.1  desp: 0.8
+	'Rating.Dom.male.Intensity' : [1.0],        # eg: 0.2  desp: 1.0
 	'female.PersSpace' : [2.0],
-	'female.FleeDist' : [2.0],
+	'female.FleeDist' : [10.0],
 	'male.PersSpace' : [2.0],
-	'male.FleeDist' : [2.0]
+	'male.FleeDist' : [10.0]
 }
 
 set_domWorld_cfg('Config_domHierarchies.ini',params)

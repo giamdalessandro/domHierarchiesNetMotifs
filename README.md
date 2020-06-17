@@ -2,7 +2,7 @@
 Final project for the Advanced Self-organization of Social Systems course, Faculty of Science and Engineering, RUG University.
 
 ## Parameters
-- **group size:** from 8 to 50 individuals (at an equal sex ratio);
+- **group size:** from 8 to 40 individuals (at an equal sex ratio);
 - **fleeing distance:** from 2.0 units (default value), to 10.0
 - **intensity of aggression:** mild and fierce species value, as in Hemelrijk (1999)
 
