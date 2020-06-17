@@ -3,10 +3,16 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import networkx as nx
-from utils import individuals_number, unify_runs_output
+from utils import set_domWorld_cfg, unify_runs_output
 
-N_IND = individuals_number('Config_domHierarchies.ini')
-dom_mat = np.zeros((N_IND,N_IND))
+params = {
+	'NumFemales' : 12,
+	'NumMales' : 12
+}
+
+set_domWorld_cfg('Config_domHierarchies.ini',params)
+os.system('DomWorld_Legacy.exe .\Config_domhierarchies.ini')
+
 
 # Reading data from DomWorld output 
 unify_runs_output('FILENAME.csv')  # unify different runs output files
@@ -17,6 +23,9 @@ data = pd.read_csv('FILENAME.csv', usecols=['run','period','actor.id','actor.sex
 df_attacks = data.query('`actor.behavior` == "Fight" | `actor.behavior` == "Flee"')
 print(df_attacks)
 
+
+N_IND = int(params['NumFemales']) + int(params['NumMales'])
+dom_mat = np.zeros((N_IND,N_IND))
 
 # Create contest matrix from raw interaction data
 # counting the number of wins in each dyad:
