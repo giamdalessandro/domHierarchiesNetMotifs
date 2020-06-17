@@ -7,14 +7,14 @@ from utils import set_domWorld_cfg, unify_runs_output
 
 params = {
 	'InitialDensity' :  [1.7],
-	'NumFemales' : [15],                         # 4, 6, 9, 15, 20
-	'NumMales' : [15],                           # 4, 6, 9, 15, 20
-	'Rating.Dom.female.Intensity' : [0.8],      # eg: 0.1  desp: 0.8
-	'Rating.Dom.male.Intensity' : [1.0],        # eg: 0.2  desp: 1.0
+	'NumFemales' : [4],                         # 4, 6, 9, 15, 20
+	'NumMales' : [4],                           # 4, 6, 9, 15, 20
+	'Rating.Dom.female.Intensity' : [0.1],      # eg: 0.1  desp: 0.8
+	'Rating.Dom.male.Intensity' : [0.2],        # eg: 0.2  desp: 1.0
 	'female.PersSpace' : [2.0],
-	'female.FleeDist' : [10.0],
+	'female.FleeDist' : [2.0],
 	'male.PersSpace' : [2.0],
-	'male.FleeDist' : [10.0]
+	'male.FleeDist' : [2.0]
 }
 
 set_domWorld_cfg('Config_domHierarchies.ini',params)
@@ -102,9 +102,6 @@ for k,v in sorted(census.items()):
 		f_census[triad_cfg[k]] = v
 		print('  ' + triad_cfg[k] + ': ' + str(v))
 	
-
-#nx.draw(net_G, with_labels=True, font_weight='bold')
-#plt.show()
 
 res = pd.DataFrame.from_dict(f_census, orient='columns')
 print(res)

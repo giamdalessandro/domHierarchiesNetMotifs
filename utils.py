@@ -1,9 +1,11 @@
 import os
 import pandas as pd
 import configparser
+import matplotlib.pyplot as plt
+import networkx as nx
 
 
-# Reading the number of individuas from the config file
+# setting domWorld config file
 def set_domWorld_cfg(filename,  params):
 	new_cfg = []
 	with open(filename, 'r') as f:
@@ -51,3 +53,9 @@ def individuals_number(cfg_file):
 	cp.read_string(file_content)
 
 	return int(cp['default']['NumFemales'][0]) + int(cp['default']['NumMales'][0])
+
+
+# plot the dominance network as a graph
+def plot_etwork(net_graph):
+	nx.draw(net_graph, with_labels=True, font_weight='bold')
+	plt.show()
