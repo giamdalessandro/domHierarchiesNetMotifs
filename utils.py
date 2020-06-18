@@ -29,7 +29,7 @@ def set_domWorld_cfg(filename,  params):
 def unify_runs_output(f_name):
 	out_files = []
 	for f in os.listdir('.'):
-		if 'output' and '.csv' in f and 'F' not in f:
+		if ('output' in f) and ('.csv' in f) and ('F' not in f):
 			out_files.append(f)
 
 	print(out_files)
@@ -56,6 +56,6 @@ def individuals_number(cfg_file):
 
 
 # plot the dominance network as a graph
-def plot_etwork(net_graph):
+def plot_network(net_graph):
 	nx.draw(net_graph, with_labels=True, font_weight='bold')
 	plt.show()

@@ -3,9 +3,11 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import networkx as nx
-from utils import set_domWorld_cfg, unify_runs_output
+from utils import set_domWorld_cfg, unify_runs_output, plot_network
 
 params = {
+	'Periods' : 260,
+	'firstDataPeriod' : 200,
 	'InitialDensity' :  1.7,
 	'NumFemales' : 4,                         # 4, 6, 9, 15, 20
 	'NumMales' : 4,                           # 4, 6, 9, 15, 20
@@ -68,9 +70,10 @@ for r in range(N_IND):
 			dom_mat[r][c] = 0
 			dom_mat[c][r] = 1
 		
-		else:                                          # deuce
-			dom_mat[r][c] = 0.5
-			dom_mat[c][r] = 0.5
+		else:          								   # deuce
+			tmp = (0.5 if dom_mat[r][c] != 0 else 0)
+			dom_mat[r][c] = tmp
+			dom_mat[c][r] = tmp
 
 print('\nDominance matrix:')
 print(dom_mat)
@@ -104,5 +107,7 @@ for k,v in sorted(census.items()):
 	
 
 res = pd.DataFrame.from_dict(f_census, orient='columns')
-print(res)
-res.to_csv('results.csv', mode='a', sep=';', header=False)
+#print(res)
+res.to_csv('results.csv', mode='a', sep=';', header=True)
+
+#plot_network(net_G)
