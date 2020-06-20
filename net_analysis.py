@@ -3,7 +3,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import networkx as nx
-from utils import set_domWorld_cfg, unify_runs_output, plot_network, run_domWorld_model
+from utils import set_domWorld_cfg, unify_runs_output, plot_network, \
+				  run_domWorld_model, davids_score
 
 
 CONFIG_FILE = 'Config_domHierarchies.ini'
@@ -13,10 +14,10 @@ params = {
 	'Periods' : 260,
 	'firstDataPeriod' : 200,
 	'InitialDensity' :  1.7,
-	'NumFemales' : 21,                         # 4, 6, 9, 12, 15, 18, 22, 24
-	'NumMales' : 21,                           # 4, 6, 9, 12, 15, 18, 22, 24
-	'Rating.Dom.female.Intensity' : 0.8,      # eg: 0.1  desp: 0.8
-	'Rating.Dom.male.Intensity' : 1.0,        # eg: 0.2  desp: 1.0
+	'NumFemales' : 4,                         # 4, 6, 9, 12, 15, 18, 22, 24
+	'NumMales' : 4,                           # 4, 6, 9, 12, 15, 18, 22, 24
+	'Rating.Dom.female.Intensity' : 0.8,       # eg: 0.1  desp: 0.8
+	'Rating.Dom.male.Intensity' : 1.0,         # eg: 0.2  desp: 1.0
 	'female.PersSpace' : 2.0,
 	'female.FleeDist' : 2.0,
 	'male.PersSpace' : 2.0,
@@ -55,6 +56,8 @@ for idx in df_attacks.index:
 print('\nContest matrix:')
 print(dom_mat)
 
+ds = davids_score(dom_mat)
+print(ds['DS'])
 
 # create dominance matrix, dom_mat[r][c] is equal to:
 #     - 1 -> r dominates c
