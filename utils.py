@@ -1,4 +1,5 @@
 import os
+import platform
 import pandas as pd
 import configparser
 import matplotlib.pyplot as plt
@@ -53,6 +54,18 @@ def individuals_number(cfg_file):
 	cp.read_string(file_content)
 
 	return int(cp['default']['NumFemales']) + int(cp['default']['NumMales'])
+
+
+# run domWorld model
+def run_domWorld_model(cfg_file):
+	if platform.system() == 'Windows':
+		os.system('DomWorld_Legacy.exe .\{}'.format(cfg_file))
+	elif platform.system() == 'Linux':
+		os.system('wine DomWorld_Legacy.exe ./{}'.format(cfg_file))
+	else:
+		print('System not supported')
+
+
 
 
 # plot the dominance network as a graph

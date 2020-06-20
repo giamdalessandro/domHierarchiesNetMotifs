@@ -3,29 +3,33 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import networkx as nx
-from utils import set_domWorld_cfg, unify_runs_output, plot_network
+from utils import set_domWorld_cfg, unify_runs_output, plot_network, run_domWorld_model
+
+
+CONFIG_FILE = 'Config_domHierarchies.ini'
+OUTPUT_FILE = 'FILENAME.csv'
 
 params = {
 	'Periods' : 260,
 	'firstDataPeriod' : 200,
 	'InitialDensity' :  1.7,
-	'NumFemales' : 21,                         # 4, 6, 9, 12, 15, 18, 20, 24
-	'NumMales' : 21,                           # 4, 6, 9, 12, 15, 18, 20, 24
-	'Rating.Dom.female.Intensity' : 0.1,      # eg: 0.1  desp: 0.8
-	'Rating.Dom.male.Intensity' : 0.2,        # eg: 0.2  desp: 1.0
+	'NumFemales' : 21,                         # 4, 6, 9, 12, 15, 18, 22, 24
+	'NumMales' : 21,                           # 4, 6, 9, 12, 15, 18, 22, 24
+	'Rating.Dom.female.Intensity' : 0.8,      # eg: 0.1  desp: 0.8
+	'Rating.Dom.male.Intensity' : 1.0,        # eg: 0.2  desp: 1.0
 	'female.PersSpace' : 2.0,
 	'female.FleeDist' : 2.0,
 	'male.PersSpace' : 2.0,
 	'male.FleeDist' : 2.0
 }
 
-set_domWorld_cfg('Config_domHierarchies.ini',params)
-os.system('DomWorld_Legacy.exe .\Config_domhierarchies.ini')
 
+set_domWorld_cfg(CONFIG_FILE,params)
+run_domWorld_model(CONFIG_FILE)
 
 # Reading data from DomWorld output 
-unify_runs_output('FILENAME.csv')  # unify different runs output files
-data = pd.read_csv('FILENAME.csv', usecols=['run','period','actor.id','actor.sex','actor.behavior','actor.score',
+unify_runs_output(OUTPUT_FILE)  # unify different runs output files
+data = pd.read_csv(OUTPUT_FILE, usecols=['run','period','actor.id','actor.sex','actor.behavior','actor.score',
                                               'receiver.id','receiver.sex','receiver.behavior','receiver.score'], sep=';')
 
 # selecting the rows representing dominance interactions
