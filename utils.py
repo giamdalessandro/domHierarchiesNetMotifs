@@ -10,7 +10,7 @@ import networkx as nx
 
 
 # setting domWorld config file
-def set_domWorld_cfg(filename,  params):
+def setDomWorldCfg(filename, params):
 	new_cfg = []
 	with open(filename, 'r') as f:
 		for row in f.readlines():
@@ -31,7 +31,7 @@ def set_domWorld_cfg(filename,  params):
 
 
 # run domWorld model
-def run_domWorld_model(cfg_file):
+def runDomWorldModel(cfg_file):
 	if platform.system() == 'Windows':
 		os.system('DomWorld_Legacy.exe .\{}'.format(cfg_file))
 	elif platform.system() == 'Linux':
@@ -43,7 +43,7 @@ def run_domWorld_model(cfg_file):
 
 
 # unify output files of different runs output filescin f_name file
-def unify_runs_output(f_name):
+def unifyRunsOutput(f_name):
 	out_files = []
 	for f in os.listdir('.'):
 		if ('output' in f) and ('.csv' in f) and ('F' not in f):
@@ -65,7 +65,7 @@ def unify_runs_output(f_name):
 # calculate the David's Score given the contest matrix.
 # The David's score for an individual i is given by:
 #	DS = w + w_2 - l - l_2 
-def davids_score(contest_mat):
+def davidsScore(contest_mat):
 	n_ind = len(contest_mat[0])
 	P_mat = np.zeros((n_ind,n_ind))    # win proportion matrix
 	w = []                             # w values list
@@ -112,35 +112,40 @@ def davids_score(contest_mat):
 
 
 # Compute hierarchy steepness
-def hierarchy_steepness(d_score):
+def hierarchySteepness(d_score):
 	# normalize the DS to ensure that steepness values 
 	# varies between 0 and 1  
 	NormDS = []
 	DS = d_score['DS']
 	n_ind = len(DS)
-	for i in DS:
-		NormDS_i = (DS + (n_ind*(n_ind-1))/2)/n_ind
+	for i in range(n_ind):
+		aux = (n_ind*(n_ind-1))/2
+		NormDS_i = (DS[i] + aux)/n_ind
 		NormDS.append(NormDS_i)
 
-	h_ranking = NormDS.sort()
-	ind_id = []
-	for rank in h_ranking:
+	tmp = NormDS.copy()
+	NormDS.sort(reverse=True)
+	ind_ids = []
+	for pos in range(n_ind):
 		for i in range(n_ind):
-			if NormDS[i] == rank:
-				ind_id.append(i+1)
+			if NormDS[pos] == tmp[i]:
+				ind_ids.append('{}'.format(i+1))
 
-	x = np.array(ind_id).reshape((-1, 1))
-	y = np.array(h_ranking)
+	ticks = [i for i in range(0,n_ind)]
+	x = np.array(ticks).reshape((-1, 1))
+	y = np.array(NormDS)
 
 	model = LinearRegression().fit(x,y)
 	steepness = model.coef_ 
-	print('hierarchy steepness: ', steepness)
+	print('\nhierarchy steepness: %.4f' % abs(steepness))
 
-	return steepness
+	plotHierarchy(x,y,ind_ids)
+
+	return abs(steepness)
 
 
 # Reading the number of individuas from the config file
-def individuals_number(cfg_file):
+def individualsNumber(cfg_file):
 	with open(cfg_file) as f:
 		file_content = '[default]\n' + f.read()
 	f.close()
@@ -151,8 +156,21 @@ def individuals_number(cfg_file):
 	return int(cp['default']['NumFemales']) + int(cp['default']['NumMales'])
 
 
+# plot hierarchy ranking
+def plotHierarchy(x, y, ind_ids):
+	n_ind = len(ind_ids)
+	fig, ax = plt.subplots()
+	ax.plot(x, y)
+	ax.set_xticks(np.arange(0, n_ind, 1))
+	ax.set_xticklabels(ind_ids)
+	ax.set(xlabel='individuals id', ylabel='normalized DS',
+		   title='steepness')
+
+	plt.show()
+
+
 # plot the dominance network as a graph
-def plot_network(net_graph):
+def plotNetwork(net_graph):
 	nx.draw(net_graph, with_labels=True, font_weight='bold')
 	plt.show()
 	return

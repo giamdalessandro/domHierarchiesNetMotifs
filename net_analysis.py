@@ -3,8 +3,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import networkx as nx
-from utils import set_domWorld_cfg, unify_runs_output, plot_network, \
-				  run_domWorld_model, davids_score
+from utils import setDomWorldCfg, runDomWorldModel, davidsScore, \
+				  unifyRunsOutput, plotNetwork, hierarchySteepness
 
 
 CONFIG_FILE = 'Config_domHierarchies.ini'
@@ -25,11 +25,11 @@ params = {
 }
 
 
-set_domWorld_cfg(CONFIG_FILE,params)
-run_domWorld_model(CONFIG_FILE)
+setDomWorldCfg(CONFIG_FILE,params)
+runDomWorldModel(CONFIG_FILE)
 
 # Reading data from DomWorld output 
-unify_runs_output(OUTPUT_FILE)  # unify different runs output files
+unifyRunsOutput(OUTPUT_FILE)  # unify different runs output files
 data = pd.read_csv(OUTPUT_FILE, usecols=['run','period','actor.id','actor.sex','actor.behavior','actor.score',
                                               'receiver.id','receiver.sex','receiver.behavior','receiver.score'], sep=';')
 
@@ -57,8 +57,8 @@ print('\nContest matrix:')
 print(dom_mat)
 
 # Compute hierarchy ranking with the David's score measure
-ds = davids_score(dom_mat)
-# print(ds['DS'])
+ds = davidsScore(dom_mat)
+hierarchySteepness(ds)
 
 # create dominance matrix, dom_mat[r][c] is equal to:
 #     - 1 -> r dominates c
@@ -116,6 +116,6 @@ for k,v in sorted(census.items()):
 
 res = pd.DataFrame.from_dict(f_census, orient='columns')
 #print(res)
-res.to_csv('results.csv', mode='a', sep=';', header=False)
+res.to_csv('results.csv', mode='a', sep=';', header=True)
 
-#plot_network(net_G)
+#plotNetwork(net_G)
