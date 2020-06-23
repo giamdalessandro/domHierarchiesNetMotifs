@@ -56,8 +56,9 @@ for idx in df_attacks.index:
 print('\nContest matrix:')
 print(dom_mat)
 
+# Compute hierarchy ranking with the David's score measure
 ds = davids_score(dom_mat)
-print(ds['DS'])
+# print(ds['DS'])
 
 # create dominance matrix, dom_mat[r][c] is equal to:
 #     - 1 -> r dominates c

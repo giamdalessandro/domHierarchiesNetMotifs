@@ -1,9 +1,11 @@
 import os
 import platform
+import configparser
+
 import numpy as np
 import pandas as pd
-import configparser
 import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression 
 import networkx as nx
 
 
@@ -100,13 +102,41 @@ def davids_score(contest_mat):
 		DS_i = w[i] + w_2[i] - l[i] - l_2[i]
 		DS.append(DS_i) 
 
-	res = {}
-	res['w'] = w
-	res['w2'] = w_2
-	res['l'] = l
-	res['l2'] = l_2
-	res['DS'] = DS
-	return res
+	d_score = {}
+	d_score['w'] = w
+	d_score['w2'] = w_2
+	d_score['l'] = l
+	d_score['l2'] = l_2
+	d_score['DS'] = DS
+	return d_score
+
+
+# Compute hierarchy steepness
+def hierarchy_steepness(d_score):
+	# normalize the DS to ensure that steepness values 
+	# varies between 0 and 1  
+	NormDS = []
+	DS = d_score['DS']
+	n_ind = len(DS)
+	for i in DS:
+		NormDS_i = (DS + (n_ind*(n_ind-1))/2)/n_ind
+		NormDS.append(NormDS_i)
+
+	h_ranking = NormDS.sort()
+	ind_id = []
+	for rank in h_ranking:
+		for i in range(n_ind):
+			if NormDS[i] == rank:
+				ind_id.append(i+1)
+
+	x = np.array(ind_id).reshape((-1, 1))
+	y = np.array(h_ranking)
+
+	model = LinearRegression().fit(x,y)
+	steepness = model.coef_ 
+	print('hierarchy steepness: ', steepness)
+
+	return steepness
 
 
 # Reading the number of individuas from the config file
