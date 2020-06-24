@@ -2,10 +2,10 @@ import os
 import platform
 import configparser
 
+from scipy import stats
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.linear_model import LinearRegression 
 import networkx as nx
 
 
@@ -60,6 +60,18 @@ def unifyRunsOutput(f_name):
 	frame.to_csv(f_name, sep=';', na_rep='NA', decimal='.')
 
 	return
+
+
+# Reading the number of individuas from the config file
+def individualsNumber(cfg_file):
+	with open(cfg_file) as f:
+		file_content = '[default]\n' + f.read()
+	f.close()
+
+	cp = configparser.ConfigParser()
+	cp.read_string(file_content)
+
+	return int(cp['default']['NumFemales']) + int(cp['default']['NumMales'])
 
 
 # calculate the David's Score given the contest matrix.
@@ -139,7 +151,7 @@ def hierarchySteepness(d_score):
 		NormDS_i = (DS[i] + (n_ind*(n_ind-1))/2)/n_ind
 		NormDS.append(NormDS_i)
 
-	print(NormDS)
+	#print(NormDS)
 	tmp = NormDS.copy()
 	NormDS.sort(reverse=True)
 	ind_ids = []
@@ -152,11 +164,7 @@ def hierarchySteepness(d_score):
 	x = np.array(ticks) #.reshape((-1, 1))
 	y = np.array(NormDS)
 
-	from scipy import stats
 	slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
-
-	#model = LinearRegression().fit(x,y)
-	#steepness = model.coef_ 
 	print('\nhierarchy steepness: %.4f' % slope)
 	print('intercept: %.4f' % intercept)
 	print('r_value: %.4f' % r_value)
@@ -166,19 +174,7 @@ def hierarchySteepness(d_score):
 	return abs(slope)
 
 
-# Reading the number of individuas from the config file
-def individualsNumber(cfg_file):
-	with open(cfg_file) as f:
-		file_content = '[default]\n' + f.read()
-	f.close()
-
-	cp = configparser.ConfigParser()
-	cp.read_string(file_content)
-
-	return int(cp['default']['NumFemales']) + int(cp['default']['NumMales'])
-
-
-# plot hierarchy ranking
+# plot hierarchy ranking and its steepness
 def plotHierarchy(x, y, ind_ids, intercept, slope):
 	n_ind = len(ind_ids)
 	fig, ax = plt.subplots()
@@ -189,10 +185,11 @@ def plotHierarchy(x, y, ind_ids, intercept, slope):
 	ax.set(xlabel='individuals id', ylabel='normalized DS',
 		   title='steepness')
 
+	plt.legend()
 	plt.show()
 
 
-# plot the dominance network as a graph
+# plot the dominance network as a digraph
 def plotNetwork(net_graph):
 	nx.draw(net_graph, with_labels=True, font_weight='bold')
 	plt.show()

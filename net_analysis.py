@@ -14,8 +14,8 @@ params = {
 	'Periods' : 260,
 	'firstDataPeriod' : 200,
 	'InitialDensity' :  1.7,
-	'NumFemales' : 12,                         # 4, 6, 9, 12, 15, 18, 21, 24
-	'NumMales' : 12,                           # 4, 6, 9, 12, 15, 18, 21, 24
+	'NumFemales' : 24,                         # 4, 6, 9, 12, 15, 18, 21, 24
+	'NumMales' : 24,                           # 4, 6, 9, 12, 15, 18, 21, 24
 	'Rating.Dom.female.Intensity' : 0.8,       # eg: 0.1  desp: 0.8
 	'Rating.Dom.male.Intensity' : 1.0,         # eg: 0.2  desp: 1.0
 	'female.PersSpace' : 2.0,
@@ -58,7 +58,7 @@ print(dom_mat)
 
 # Compute hierarchy ranking with the David's score measure
 ds = davidsScore(dom_mat)
-hierarchySteepness(ds)
+steep = hierarchySteepness(ds)
 
 # create dominance matrix, dom_mat[r][c] is equal to:
 #     - 1 -> r dominates c
@@ -88,7 +88,8 @@ print(dom_mat)
 
 
 
-# triadic census of the network
+# triadic census of the dominance network represented as a digraph,
+# individuals are the nodes, and edges their dominance relationship
 net_G = nx.from_numpy_matrix(dom_mat, create_using=nx.DiGraph)
 census = nx.triadic_census(net_G)
 
@@ -102,12 +103,13 @@ triad_cfg = {
 	'030C': 'Cycle'
 }
 
-print('\nNetwork Triadic Census:')
 f_census = {}
 f_census['group-size'] = [N_IND]
 f_census['flee-dist'] = [params['female.FleeDist']]
 f_census['aggr-intensity'] = [('mild' if params['Rating.Dom.female.Intensity'] == 0.1 else 'fierce')]
+f_census['steepness'] = round(steep,4)
 
+print('\nNetwork Triadic Census:')
 for k,v in sorted(census.items()):
 	if k in triad_cfg:
 		f_census[triad_cfg[k]] = [v]
