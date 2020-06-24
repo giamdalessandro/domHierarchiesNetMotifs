@@ -14,8 +14,8 @@ params = {
 	'Periods' : 260,
 	'firstDataPeriod' : 200,
 	'InitialDensity' :  1.7,
-	'NumFemales' : 4,                         # 4, 6, 9, 12, 15, 18, 22, 24
-	'NumMales' : 4,                           # 4, 6, 9, 12, 15, 18, 22, 24
+	'NumFemales' : 12,                         # 4, 6, 9, 12, 15, 18, 21, 24
+	'NumMales' : 12,                           # 4, 6, 9, 12, 15, 18, 21, 24
 	'Rating.Dom.female.Intensity' : 0.8,       # eg: 0.1  desp: 0.8
 	'Rating.Dom.male.Intensity' : 1.0,         # eg: 0.2  desp: 1.0
 	'female.PersSpace' : 2.0,
