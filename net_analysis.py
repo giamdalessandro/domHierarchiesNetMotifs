@@ -1,4 +1,5 @@
 import os
+import sys
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -7,22 +8,28 @@ from utils import setDomWorldCfg, runDomWorldModel, davidsScore, \
 				  unifyRunsOutput, plotNetwork, hierarchySteepness
 
 
-CONFIG_FILE = 'Config_domHierarchies.ini'
-OUTPUT_FILE = 'FILENAME.csv'
+if len(sys.argv) > 1:
+	from json import loads
+	CONFIG_FILE = sys.argv[1]
+	OUTPUT_FILE = sys.argv[2]
+	params = loads(sys.argv[3])
 
-params = {
-	'Periods' : 260,
-	'firstDataPeriod' : 200,
-	'InitialDensity' :  1.7,
-	'NumFemales' : 24,                         # 4, 6, 9, 12, 15, 18, 21, 24
-	'NumMales' : 24,                           # 4, 6, 9, 12, 15, 18, 21, 24
-	'Rating.Dom.female.Intensity' : 0.8,       # eg: 0.1  desp: 0.8
-	'Rating.Dom.male.Intensity' : 1.0,         # eg: 0.2  desp: 1.0
-	'female.PersSpace' : 2.0,
-	'female.FleeDist' : 2.0,
-	'male.PersSpace' : 2.0,
-	'male.FleeDist' : 2.0
-}
+else:
+	CONFIG_FILE = 'Config_domHierarchies.ini'
+	OUTPUT_FILE = 'FILENAME.csv'
+	params = {
+		"Periods" : 260,
+		"firstDataPeriod" : 200,
+		"InitialDensity" :  1.7,
+		"NumFemales" : 18,                         # 4, 6, 9, 12, 15, 18, 21, 24
+		"NumMales" : 18,                           # 4, 6, 9, 12, 15, 18, 21, 24
+		"Rating.Dom.female.Intensity" : 0.8,       # eg: 0.1  desp: 0.8
+		"Rating.Dom.male.Intensity" : 1.0,         # eg: 0.2  desp: 1.0
+		"female.PersSpace" : 2.0,
+		"female.FleeDist" : 8.0,
+		"male.PersSpace" : 2.0,
+		"male.FleeDist" : 8.0
+	}
 
 
 setDomWorldCfg(CONFIG_FILE,params)
@@ -117,7 +124,6 @@ for k,v in sorted(census.items()):
 	
 
 res = pd.DataFrame.from_dict(f_census, orient='columns')
-#print(res)
-res.to_csv('results.csv', mode='a', sep=';', header=True)
+res.to_csv('results.csv', mode='a', sep=';', header=False)
 
 #plotNetwork(net_G)

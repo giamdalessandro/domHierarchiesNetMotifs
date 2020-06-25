@@ -78,10 +78,10 @@ def individualsNumber(cfg_file):
 # The David's score for an individual i is given by:
 #	DS = w + w_2 - l - l_2 
 def davidsScore(contest_mat):
-	# compute win/fights ratio
+	# compute win proportion matrix
 	n_ind = len(contest_mat[0])
 	P_mat = np.zeros((n_ind,n_ind))    # win proportion matrix
-	w = []                             # win ratio list
+	w = []                             
 	for i in range(n_ind):
 		P_list = [] 
 		for j in range(n_ind):
@@ -98,8 +98,8 @@ def davidsScore(contest_mat):
 		w_i = sum(P_list)              # i win rate 
 		w.append(w_i)
 
-	# compute loss/fights ratio
-	l = []                             # loss ratio list
+	# compute l term to calculate David's Score
+	l = []
 	for j in range(n_ind):
 		l_list = []
 		for i in range(n_ind):
@@ -169,7 +169,7 @@ def hierarchySteepness(d_score):
 	print('intercept: %.4f' % intercept)
 	print('r_value: %.4f' % r_value)
 
-	plotHierarchy(x,y,ind_ids,intercept,slope)
+	#plotHierarchy(x,y,ind_ids,intercept,slope)
 
 	return abs(slope)
 
@@ -178,12 +178,14 @@ def hierarchySteepness(d_score):
 def plotHierarchy(x, y, ind_ids, intercept, slope):
 	n_ind = len(ind_ids)
 	fig, ax = plt.subplots()
-	ax.plot(x, y, 'o-')
+	ax.plot(x, y, 'o-', label='NormDS')
 	ax.plot(x, intercept + slope*x, '-', label='fitted line')
+
+	ax.set_yticks(np.arange(0, round(y[0])+2, 2))
 	ax.set_xticks(np.arange(0, n_ind, 1))
 	ax.set_xticklabels(ind_ids)
 	ax.set(xlabel='individuals id', ylabel='normalized DS',
-		   title='steepness')
+		   title='hierarchy steepness')
 
 	plt.legend()
 	plt.show()
