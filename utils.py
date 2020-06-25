@@ -196,3 +196,65 @@ def plotNetwork(net_graph):
 	nx.draw(net_graph, with_labels=True, font_weight='bold')
 	plt.show()
 	return
+	
+
+# plot hierarchy steepnees w.r.t group sizes, for mild and fierce species
+def plotsAggrIntensity():
+	sizes = [8, 12, 18, 24, 30, 36, 42, 48]
+	steep_mild = [0.2566, 0.3419, 0.3306, 0.2964, 0.3189, 0.3513, 0.3001, 0.2761]
+	steep_fierce = [0.4298, 0.3478, 0.4544, 0.3787, 0.4979, 0.4144, 0.4905, 0.4487]
+
+	fig, ax = plt.subplots()
+	ax.plot(sizes, steep_mild, 'o-', label='mild')
+	ax.plot(sizes, steep_fierce, 'o-', label='fierce')
+
+	ax.set_yticks(np.arange(0, 1, 0.2))
+	ax.set_xticks(sizes)
+	#ax.set_xticklabels(ind_ids)
+	ax.set(xlabel='group size', ylabel='hierarchy steepness',
+		   title='Intesity of aggression')
+
+	plt.legend()
+	plt.show()
+
+
+# plot occurences of triadic patterns for different group sizes
+def plotstTriadicPatterns(aggr):
+	sizes = [8, 12, 18, 24, 30, 36, 42, 48]
+	if aggr == 'mild':
+		pat_8 =  [0, 0,	0,	0,	0,	0,	56]
+		pat_12 = [0, 0,	0,	0,	0,	7, 193]
+		pat_18 = [0, 0,	0,	0,	0,	34,	750]
+		pat_24 = [0, 0,	0,	0,	0,	147, 1426]
+		pat_30 = [0, 0,	0,	0,	0,	323, 2901] 
+		pat_36 = [0, 0,	22,	22,	45,	495, 4728]
+		pat_42 = [0, 14,	305, 231, 119, 1153, 5937] 
+		pat_48 = [5, 144, 917, 565, 498, 1655, 7794]
+	else:
+		pat_8 =  [0, 0,	0,	0,	0,	0,	56]
+		pat_12 = [0, 0,	0,	0,	0,	10, 210]
+		pat_18 = [0, 0,	0,	0,	0,	39, 730]
+		pat_24 = [0, 0,	0,	0,	0,	196, 1699]
+		pat_30 = [0, 0,	0,	0,	0,	321, 3102] 
+		pat_36 = [0, 1,	61,	36,	43,	678, 4721]
+		pat_42 = [0, 17, 289, 161, 205, 962, 7512]
+		pat_48 = [3, 131, 745, 628, 692, 1166, 9230]
+	
+	fig, ax = plt.subplots()
+	ax.plot(np.arange(0, 7, 1),  pat_8, 'o-', label='8')
+	ax.plot(np.arange(0, 7, 1), pat_12, 'o-', label='12')
+	ax.plot(np.arange(0, 7, 1), pat_18, 'o-', label='18')
+	ax.plot(np.arange(0, 7, 1), pat_24, 'o-', label='24')
+	ax.plot(np.arange(0, 7, 1), pat_30, 'o-', label='30')
+	ax.plot(np.arange(0, 7, 1), pat_36, 'o-', label='36')
+	ax.plot(np.arange(0, 7, 1), pat_42, 'o-', label='42')
+	ax.plot(np.arange(0, 7, 1), pat_48, 'o-', label='48')
+
+	ax.set_yticks(np.arange(0, pat_48[-1], 500))
+	ax.set_xticks(np.arange(0, len(pat_8), 1))
+	ax.set_xticklabels(['Null','Single-edge','Double-dominant','Double-subordinate','Pass-along','Transitive','Cycle'])
+	ax.set(ylabel='pattern occurrences',
+		   title='Triadic patterns - {} species'.format(aggr))
+
+	plt.legend()
+	plt.show()
