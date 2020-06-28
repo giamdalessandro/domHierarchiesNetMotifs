@@ -2,12 +2,11 @@ import os
 import platform
 import configparser
 
-from scipy import stats
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import networkx as nx
-
+from scipy import stats
+from networkx import draw
 
 # setting domWorld config file
 def setDomWorldCfg(filename, params):
@@ -142,8 +141,7 @@ def davidsScore(contest_mat):
 
 # Compute hierarchy steepness
 def hierarchySteepness(d_score):
-	# normalize the DS to ensure that steepness values 
-	# varies between 0 and 1  
+	# normalize the DS to ensure that steepness varies between 0 and 1  
 	NormDS = []
 	DS = d_score['DS']
 	n_ind = len(DS)
@@ -151,7 +149,6 @@ def hierarchySteepness(d_score):
 		NormDS_i = (DS[i] + (n_ind*(n_ind-1))/2)/n_ind
 		NormDS.append(NormDS_i)
 
-	#print(NormDS)
 	tmp = NormDS.copy()
 	NormDS.sort(reverse=True)
 	ind_ids = []
@@ -161,7 +158,7 @@ def hierarchySteepness(d_score):
 				ind_ids.append('{}'.format(i+1))
 
 	ticks = [i for i in range(0,n_ind)]
-	x = np.array(ticks) #.reshape((-1, 1))
+	x = np.array(ticks)
 	y = np.array(NormDS)
 
 	slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
@@ -172,6 +169,13 @@ def hierarchySteepness(d_score):
 	#plotHierarchy(x,y,ind_ids,intercept,slope)
 
 	return abs(slope)
+
+
+# plot the dominance network as a digraph
+def plotNetwork(net_graph):
+	draw(net_graph, with_labels=True, font_weight='bold')
+	plt.show()
+	return
 
 
 # plot hierarchy ranking and its steepness
@@ -189,20 +193,19 @@ def plotHierarchy(x, y, ind_ids, intercept, slope):
 
 	plt.legend()
 	plt.show()
-
-
-# plot the dominance network as a digraph
-def plotNetwork(net_graph):
-	nx.draw(net_graph, with_labels=True, font_weight='bold')
-	plt.show()
-	return
 	
 
 # plot hierarchy steepnees w.r.t group sizes, for mild and fierce species
-def plotsAggrIntensity():
+def plotAggrIntensity():
+	cols = ['group-size','flee-dist','aggr-intensity','steepness']
+	data = pd.read_csv('results.csv', usecols=cols, sep=',')
+
+	mild_data = data.query('`flee-dist` == 2 & `aggr-intensity` == "mild"')
+	fierce_data = data.query('`flee-dist` == 2 & `aggr-intensity` == "fierce"')
+	
 	sizes = [8, 12, 18, 24, 30, 36, 42, 48]
-	steep_mild = [0.2566, 0.3419, 0.3306, 0.2964, 0.3189, 0.3513, 0.3001, 0.2761]
-	steep_fierce = [0.4298, 0.3478, 0.4544, 0.3787, 0.4979, 0.4144, 0.4905, 0.4487]
+	steep_mild = np.array(mild_data['steepness'], dtype=float)
+	steep_fierce = np.array(fierce_data['steepness'], dtype=float)
 
 	fig, ax = plt.subplots()
 	ax.plot(sizes, steep_mild, 'o-', label='mild')
@@ -219,41 +222,23 @@ def plotsAggrIntensity():
 
 
 # plot occurences of triadic patterns for different group sizes
-def plotstTriadicPatterns(aggr):   
+def plotTriadicPatterns(aggr):   
 	# aggr: 'mild' or 'fierce'
-	sizes = [8, 12, 18, 24, 30, 36, 42, 48]
-	if aggr == 'mild':
-		pat_8 =  [0, 0,	0,	0,	0,	0,	56]
-		pat_12 = [0, 0,	0,	0,	0,	7, 193]
-		pat_18 = [0, 0,	0,	0,	0,	34,	750]
-		pat_24 = [0, 0,	0,	0,	0,	147, 1426]
-		pat_30 = [0, 0,	0,	0,	0,	323, 2901] 
-		pat_36 = [0, 0,	22,	22,	45,	495, 4728]
-		pat_42 = [0, 14,	305, 231, 119, 1153, 5937] 
-		pat_48 = [5, 144, 917, 565, 498, 1655, 7794]
-	else:
-		pat_8 =  [0, 0,	0,	0,	0,	0,	56]
-		pat_12 = [0, 0,	0,	0,	0,	10, 210]
-		pat_18 = [0, 0,	0,	0,	0,	39, 730]
-		pat_24 = [0, 0,	0,	0,	0,	196, 1699]
-		pat_30 = [0, 0,	0,	0,	0,	321, 3102] 
-		pat_36 = [0, 1,	61,	36,	43,	678, 4721]
-		pat_42 = [0, 17, 289, 161, 205, 962, 7512]
-		pat_48 = [3, 131, 745, 628, 692, 1166, 9230]
+	patterns = ['Null','Single-edge','Double-dominant','Double-subordinate','Pass-along','Transitive','Cycle']
+	cols = ['group-size','flee-dist','aggr-intensity','Null','Single-edge',
+	        'Double-dominant','Double-subordinate','Pass-along','Transitive','Cycle']
+
+	data = pd.read_csv('results.csv', usecols=cols, sep=',')
+	pat_data = data.query('`flee-dist` == 2 & `aggr-intensity` == "{}"'.format(aggr))
 	
 	fig, ax = plt.subplots()
-	ax.plot(np.arange(0, 7, 1),  pat_8, 'o-', label='8')
-	ax.plot(np.arange(0, 7, 1), pat_12, 'o-', label='12')
-	ax.plot(np.arange(0, 7, 1), pat_18, 'o-', label='18')
-	ax.plot(np.arange(0, 7, 1), pat_24, 'o-', label='24')
-	ax.plot(np.arange(0, 7, 1), pat_30, 'o-', label='30')
-	ax.plot(np.arange(0, 7, 1), pat_36, 'o-', label='36')
-	ax.plot(np.arange(0, 7, 1), pat_42, 'o-', label='42')
-	ax.plot(np.arange(0, 7, 1), pat_48, 'o-', label='48')
+	for idx, row in pat_data.iterrows():
+		ax.plot(np.arange(0, 7, 1),  row[patterns], 'o-', label=row['group-size'])
 
-	ax.set_yticks(np.arange(0, pat_48[-1], 500))
-	ax.set_xticks(np.arange(0, len(pat_8), 1))
-	ax.set_xticklabels(['Null','Single-edge','Double-dominant','Double-subordinate','Pass-along','Transitive','Cycle'])
+	ytick = np.amax(np.array(pat_data[['Transitive']])) + 200
+	ax.set_yticks(np.arange(0, ytick, 400))
+	ax.set_xticks(np.arange(0, 8, 1))
+	ax.set_xticklabels(patterns)
 	ax.set(ylabel='pattern occurrences',
 		   title='Triadic patterns - {} species'.format(aggr))
 
@@ -262,24 +247,26 @@ def plotstTriadicPatterns(aggr):
 
 
 # plot occurences of triadic patterns for different fleeing distances
-def plotFleeDist():
+def plotFleeDist(size,aggr):
+	# size: different flee distances have been tested only on 24 or 36 group
+	# aggr: 'mild' or 'fierce'
+	patterns = ['Null','Single-edge','Double-dominant','Double-subordinate','Pass-along','Transitive','Cycle']
 	cols = ['group-size','flee-dist','aggr-intensity','steepness','Null','Single-edge',
 	        'Double-dominant','Double-subordinate','Pass-along','Transitive','Cycle']
 	data = pd.read_csv('results.csv', usecols=cols, sep=',')
 
-	m_data = data.query('`group-size` == 24 & `aggr-intensity` == "mild"')
-	f_data = data.query('`group-size` == 24 & `aggr-intensity` == "fierce"')
-
+	flee_data = data.query('`group-size` == {} & `aggr-intensity` == "{}"'.format(size,aggr))
+	
 	fig, ax = plt.subplots()
-	for idx, row in m_data.iterrows():
-		ax.plot(np.arange(0, 7, 1),  row[['Null','Single-edge','Double-dominant',
-		                        'Double-subordinate','Pass-along','Transitive','Cycle']], 'o-', label=row['flee-dist'])
+	for idx, row in flee_data.iterrows():
+		ax.plot(np.arange(0, 7, 1),  row[patterns], 'o-', label=row['flee-dist'])
 
-	ax.set_yticks(np.arange(0, 1800, 200))
+	ytick = (1800 if size == 24 else 5000)
+	ax.set_yticks(np.arange(0, ytick, 200))
 	ax.set_xticks(np.arange(0, 8, 1))
-	ax.set_xticklabels(['Null','Single-edge','Double-dominant','Double-subordinate','Pass-along','Transitive','Cycle'])
+	ax.set_xticklabels(patterns)
 	ax.set(ylabel='pattern occurrences',
-		   title='Triadic patterns - fleeing distance (mild)')
+		   title='Triadic patterns - fleeing distance ({})'.format(aggr))
 
 	plt.legend()
 	plt.show()
