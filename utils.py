@@ -270,3 +270,66 @@ def plotFleeDist(size,aggr):
 
 	plt.legend()
 	plt.show()
+
+
+
+def autolabel(axes, rects):
+    """Attach a text label above each bar in *rects*, displaying its height."""
+    for rect in rects:
+        height = rect.get_height()
+        axes.annotate('{}'.format(height),
+                    xy=(rect.get_x() + rect.get_width() / 2, height),
+                    xytext=(0, 3),  # 3 points vertical offset
+                    textcoords="offset points",
+                    ha='center', va='bottom')
+
+
+# plot occurences of triadic patterns for different group sizes
+def plotFreqPatterns():   
+	# aggr: 'mild' or 'fierce'
+	patterns = ['Null','Single-edge','Double-dominant','Double-subordinate','Pass-along','Transitive','Cycle']
+	cols = ['group-size','flee-dist','aggr-intensity','Null','Single-edge',
+	        'Double-dominant','Double-subordinate','Pass-along','Transitive','Cycle']
+
+	data = pd.read_csv('results.csv', usecols=cols, sep=',')
+	mild_data = data.query('`flee-dist` == 2 & `aggr-intensity` == "mild"')
+	fierce_data = data.query('`flee-dist` == 2 & `aggr-intensity` == "fierce"')
+
+	sizes = ['8', '12', '18', '24', '30', '36', '42', '48']
+	tot_fierce = []
+	for idx, row in fierce_data.iterrows():
+		tot_fierce.append(sum(row[patterns]))
+
+	freq_mild = {}
+	freq_fierce = {}
+	width = 0.12  # the width of the bars
+	for p in patterns:
+		freq_m = []
+		freq_f = []		
+		for idx, row in mild_data.iterrows():      # for each group size
+			tot_mild = sum(row[patterns])
+			freq_m.append(round(row[p]/tot_mild, 2))
+			freq_f.append(round(fierce_data[p][idx+8]/tot_fierce[idx], 2))
+	
+		freq_mild[p] = freq_m
+		freq_fierce[p] = freq_f 
+		#rec1 = ax.bar(np.arange(0, len(sizes), 1) - width/2, freq_mild, width, label='mild')
+		#rec2 = ax.bar(np.arange(0, len(sizes), 1) + width/2, freq_fierce, width, label='fierce')
+
+	fig, ax = plt.subplots()
+	plt.grid(True, axis='y', linestyle='-.', linewidth=0.5)
+	for s in range(len(sizes)):
+		to_plot = []
+		for p in range(len(patterns)):
+			to_plot.append(freq_fierce[patterns[p]][s])
+
+		step = [i + s*0.12 - 0.48 for i in range(len(patterns))]
+		ax.bar(step, to_plot, width, label=sizes[s])
+
+	ax.set_yticks(np.arange(0, 1.1, 0.1))
+	ax.set_xticks(np.arange(0, len(patterns), 1))
+	ax.set_xticklabels(patterns)
+	ax.set(ylabel='frequency', title='Triadic pattern frequencies - fierce species')
+
+	plt.legend(title='group size')
+	plt.show()

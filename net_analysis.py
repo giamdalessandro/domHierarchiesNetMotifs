@@ -44,7 +44,6 @@ data = pd.read_csv(OUTPUT_FILE, usecols=['run','period','actor.id','actor.sex','
 df_attacks = data.query('`actor.behavior` == "Fight" | `actor.behavior` == "Flee"')
 #print(df_attacks)
 
-
 N_IND = int(params['NumFemales']) + int(params['NumMales'])
 dom_mat = np.zeros((N_IND,N_IND))
 
@@ -62,6 +61,18 @@ for idx in df_attacks.index:
 
 print('\nContest matrix:')
 print(dom_mat)
+
+'''
+N_IND = 7
+dom_mat = [
+	[0, 0, 1, 2, 10, 63, 8], 
+	[0, 0, 2, 3, 0, 88, 4], 
+	[0, 0, 0, 4, 65, 84, 3],
+	[0, 0, 0, 0, 0, 80, 10],
+	[0, 0, 0, 0, 0, 4, 1],
+	[0, 1, 5, 0, 10, 0, 6], 
+	[0, 0, 0, 0, 0, 2, 0]
+]'''
 
 # Compute hierarchy ranking with the David's score measure
 ds = davidsScore(dom_mat)
