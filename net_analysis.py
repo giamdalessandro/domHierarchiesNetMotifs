@@ -5,7 +5,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import networkx as nx
 from dom_utils import setDomWorldCfg, runDomWorldModel, davidsScore, \
-				  unifyRunsOutput, plotNetwork, hierarchySteepness
+				  unifyRunsOutput, hierarchySteepness, significanceProfile
+from graph_plot import plotNetwork
 
 
 if len(sys.argv) > 1:

@@ -4,8 +4,9 @@ import configparser
 
 import numpy as np
 import pandas as pd
+import networkx as nx
 from scipy import stats
-from networkx import draw
+from graph_plot import plotHierarchy
 
 # setting domWorld config file
 def setDomWorldCfg(filename, params):
@@ -138,7 +139,7 @@ def davidsScore(contest_mat):
 	return d_score
 
 
-# Compute hierarchy steepness
+# Compute hierarchy steepness as linear fit of the ranked David's scores
 def hierarchySteepness(d_score):
 	# normalize the DS to ensure that steepness varies between 0 and 1  
 	NormDS = []
@@ -168,3 +169,42 @@ def hierarchySteepness(d_score):
 	#plotHierarchy(x,y,ind_ids,intercept,slope)
 
 	return abs(slope)
+
+
+# maps nx.triadic_census() subgraph codes to explicit to 
+# triadic patterns names
+def mapTriadCodes(census, rnd_census, triad_cfg):
+	real = {}
+	for k,v in sorted(census.items()):
+		if k in triad_cfg:
+			real[triad_cfg[k]] = v
+
+	random = {}
+	for rc in rnd_census:
+		for k,v in sorted(rc.items()):
+			if k in triad_cfg:
+				if k not in random.keys():
+					random[triad_cfg[k]] = []
+				
+				random[triad_cfg[k]].append(v)
+	
+	return (real, random)
+
+
+# compute the significance profile of the patterns mapped in 
+# triad_cfg, inside directed graph G
+def significanceProfile(G, triad_cfg):
+	# G: directed graph representing the network 
+	# triads_cfg: dict mapping interesting triadic patterns 
+	#       codes, as in nx.triadic_census(), with explicit names. 
+	# 		(e.g. triad_cfg = {'003' : 'Null', '012' : 'Single-edge'})
+	census = nx.triadic_census(G)
+	degree_sequence = [d for n, d in G.degree()]  # degree sequence
+	print("Degree sequence %s" % degree_sequence)
+
+	random_nets_census = []
+	for i in range(100):
+		rnd_G = nx.configuration_model(degree_sequence, create_using=nx.DiGraph, seed=np.random(i))
+		random_nets_census.append(nx.triadic_census(rnd_G))
+
+	real_census, random_census = mapTriadCodes(census,random_nets_census,triad_cfg)	
