@@ -4,9 +4,10 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import networkx as nx
-from dom_utils import setDomWorldCfg, runDomWorldModel, davidsScore, \
-				  unifyRunsOutput, hierarchySteepness, significanceProfile
 from graph_plot import plotNetwork
+from dom_utils import setDomWorldCfg, runDomWorldModel, davidsScore, \
+				  unifyRunsOutput, hierarchySteepness, triadSignificanceProfile
+
 
 
 if len(sys.argv) > 1:
@@ -22,19 +23,19 @@ else:
 		"Periods" : 260,
 		"firstDataPeriod" : 200,
 		"InitialDensity" :  1.7,
-		"NumFemales" : 18,                         # 4, 6, 9, 12, 15, 18, 21, 24
-		"NumMales" : 18,                           # 4, 6, 9, 12, 15, 18, 21, 24
-		"Rating.Dom.female.Intensity" : 0.8,       # eg: 0.1  desp: 0.8
-		"Rating.Dom.male.Intensity" : 1.0,         # eg: 0.2  desp: 1.0
+		"NumFemales" : 4,                         # 4, 6, 9, 12, 15, 18, 21, 24
+		"NumMales" : 4,                           # 4, 6, 9, 12, 15, 18, 21, 24
+		"Rating.Dom.female.Intensity" : 0.1,       # eg: 0.1  desp: 0.8
+		"Rating.Dom.male.Intensity" : 0.2,         # eg: 0.2  desp: 1.0
 		"female.PersSpace" : 2.0,
-		"female.FleeDist" : 8.0,
+		"female.FleeDist" : 2.0,
 		"male.PersSpace" : 2.0,
-		"male.FleeDist" : 8.0
+		"male.FleeDist" : 2.0
 	}
 
 
-setDomWorldCfg(CONFIG_FILE,params)
-runDomWorldModel(CONFIG_FILE)
+#setDomWorldCfg(CONFIG_FILE,params)
+#runDomWorldModel(CONFIG_FILE)
 
 # Reading data from DomWorld output 
 unifyRunsOutput(OUTPUT_FILE)  # unify different runs output files
@@ -109,9 +110,6 @@ print(dom_mat)
 
 # triadic census of the dominance network represented as a digraph,
 # individuals are the nodes, and edges their dominance relationship
-net_G = nx.from_numpy_matrix(dom_mat, create_using=nx.DiGraph)
-census = nx.triadic_census(net_G)
-
 triad_cfg = {
 	'003' : 'Null',
 	'012' : 'Single-edge',
@@ -121,6 +119,11 @@ triad_cfg = {
 	'030T': 'Transitive',
 	'030C': 'Cycle'
 }
+
+net_G = nx.from_numpy_matrix(dom_mat, create_using=nx.DiGraph)
+census = nx.triadic_census(net_G)
+
+sp = triadSignificanceProfile(net_G, triad_cfg)
 
 f_census = {}
 f_census['group-size'] = [N_IND]
