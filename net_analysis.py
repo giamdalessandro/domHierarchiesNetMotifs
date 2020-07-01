@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import networkx as nx
-from utils import setDomWorldCfg, runDomWorldModel, davidsScore, \
+from dom_utils import setDomWorldCfg, runDomWorldModel, davidsScore, \
 				  unifyRunsOutput, plotNetwork, hierarchySteepness
 
 
