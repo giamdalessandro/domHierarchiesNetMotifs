@@ -201,8 +201,8 @@ def triadSignificanceProfile(G, triad_cfg):
 	census = nx.triadic_census(G)
 	in_degree_sequence = [d for n, d in G.in_degree()]  # in degree sequence
 	out_degree_sequence = [d for n, d in G.out_degree()]  # out degree sequence
-	print("In_degree sequence %s" % in_degree_sequence)
-	print("Out_degree sequence %s" % out_degree_sequence)
+	#print("In_degree sequence %s" % in_degree_sequence)
+	#print("Out_degree sequence %s" % out_degree_sequence)
 
 	random_nets_census = []
 	for i in range(100):
@@ -226,7 +226,7 @@ def triadSignificanceProfile(G, triad_cfg):
 	for i in range(len(z_score)):
 		z_norm = np.linalg.norm(z_score)
 		norm_z_score = (z_score[i]/z_norm if z_norm != 0 else z_score[i])
-		SP.append(norm_z_score)
+		SP.append(round(norm_z_score,4))
 
-	print(SP)
+	#print(SP)
 	return SP

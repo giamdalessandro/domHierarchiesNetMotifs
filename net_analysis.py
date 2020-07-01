@@ -34,8 +34,8 @@ else:
 	}
 
 
-#setDomWorldCfg(CONFIG_FILE,params)
-#runDomWorldModel(CONFIG_FILE)
+setDomWorldCfg(CONFIG_FILE,params)
+runDomWorldModel(CONFIG_FILE)
 
 # Reading data from DomWorld output 
 unifyRunsOutput(OUTPUT_FILE)  # unify different runs output files
@@ -124,6 +124,8 @@ net_G = nx.from_numpy_matrix(dom_mat, create_using=nx.DiGraph)
 census = nx.triadic_census(net_G)
 
 sp = triadSignificanceProfile(net_G, triad_cfg)
+with open('requirements.txt', 'a') as f:
+	f.write('%s' % sp)
 
 f_census = {}
 f_census['group-size'] = [N_IND]
