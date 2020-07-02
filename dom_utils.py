@@ -215,6 +215,7 @@ def triadSignificanceProfile(G, triad_cfg):
 
 	z_score = []
 	for p in real_census.keys():
+		print(p)
 		N_real_p = real_census[p]
 		N_rand_p = np.mean(random_census[p])
 		std = np.std(random_census[p])

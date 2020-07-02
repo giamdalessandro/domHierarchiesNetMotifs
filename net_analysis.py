@@ -113,19 +113,19 @@ print(dom_mat)
 triad_cfg = {
 	'003' : 'Null',
 	'012' : 'Single-edge',
+	'021C': 'Pass-along',
 	'021D': 'Double-dominant',
 	'021U': 'Double-subordinate',
-	'021C': 'Pass-along',
-	'030T': 'Transitive',
-	'030C': 'Cycle'
+	'030C': 'Cycle',
+	'030T': 'Transitive'
 }
 
 net_G = nx.from_numpy_matrix(dom_mat, create_using=nx.DiGraph)
 census = nx.triadic_census(net_G)
 
 sp = triadSignificanceProfile(net_G, triad_cfg)
-with open('requirements.txt', 'a') as f:
-	f.write('%s' % sp)
+#with open('requirements.txt', 'a') as f:
+#	f.write('%s\n' % sp)
 
 f_census = {}
 f_census['group-size'] = [N_IND]
