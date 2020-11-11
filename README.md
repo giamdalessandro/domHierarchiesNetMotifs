@@ -6,7 +6,7 @@ The experiment has been performed with different values for the following domWor
 - **group size:** from 8 to 48 individuals (at an equal sex ratio);
 - **fleeing distance:** from 2.0 (default domWorld value), to 10.0 units;
 - **intensity of aggression:** mild (0.1 females 0.2 males) and fierce (0.8 females 1.0 males) species values, as in *An individual-orientated model of the
-emergence of despotic and egalitarian societies* (Hemelrijk, 1999).
+emergence of despotic and egalitarian societies* (C.Hemelrijk, 1999).
 
 ## Installing
 The code has been written with `python 3.7.7`, that can be downloaded [here](https://www.python.org/downloads/release/python-377/). The additional packages needed are specified in the *requirements.txt* file, and can be installed with the following terminal command:
