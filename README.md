@@ -9,7 +9,7 @@ The experiment has been performed with different values for the following domWor
 
 ## Installing
 The code has been written with `python 3.7.7`, that can be downloaded [here](https://www.python.org/downloads/release/python-377/). The additional packages needed are specified in the *requirements.txt* file, and can be installed with the following terminal command:
-- if working on linux you may need [Wine]() to run `DomWorld Legacy model`, which was only available as a windows *.exe* file when I wrote this code.
+- if working on linux you may need [Wine](https://wiki.ubuntu-it.org/Virtualizzazione/Wine) to run `DomWorld Legacy model`, which was only available as a windows *.exe* file when I wrote this code.
 
 ```shell
 python3 -m pip install -r requirements.txt
