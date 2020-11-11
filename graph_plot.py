@@ -5,15 +5,19 @@ import matplotlib.pyplot as plt
 from networkx import draw
 
 
-# plot the dominance network as a digraph
 def plotNetwork(net_graph):
+	"""
+	Plots the dominance network as a digraph.
+	"""
 	draw(net_graph, with_labels=True, font_weight='bold')
 	plt.show()
 	return
 
 
-# plot hierarchy ranking and its steepness
 def plotHierarchy(x, y, ind_ids, intercept, slope):
+	"""
+	Plots hierarchy ranking and its steepness.
+	"""
 	n_ind = len(ind_ids)
 	fig, ax = plt.subplots()
 	ax.plot(x, y, 'o-', label='NormDS')
@@ -29,8 +33,10 @@ def plotHierarchy(x, y, ind_ids, intercept, slope):
 	plt.show()
 	
 
-# plot hierarchy steepnees w.r.t group sizes, for mild and fierce species
 def plotAggrIntensity():
+	"""
+	Plots hierarchy steepnees w.r.t group sizes, for mild and fierce species.
+	"""
 	cols = ['group-size','flee-dist','aggr-intensity','steepness']
 	data = pd.read_csv('results.csv', usecols=cols, sep=',')
 
@@ -55,9 +61,11 @@ def plotAggrIntensity():
 	plt.show()
 
 
-# plot occurences of triadic patterns for different group sizes
-def plotTriadicPatterns(aggr):   
-	# aggr: 'mild' or 'fierce'
+def plotTriadicPatterns(aggr):
+	"""
+	Plot occurences of triadic patterns for different group sizes.
+		- aggr : 'mild' or 'fierce'
+	"""   
 	patterns = ['Null','Single-edge','Double-dominant','Double-subordinate','Pass-along','Transitive','Cycle']
 	cols = ['group-size','flee-dist','aggr-intensity','Null','Single-edge',
 	        'Double-dominant','Double-subordinate','Pass-along','Transitive','Cycle']
@@ -80,10 +88,12 @@ def plotTriadicPatterns(aggr):
 	plt.show()
 
 
-# plot occurences of triadic patterns for different fleeing distances
-def plotFleeDist(size,aggr):
-	# size: different flee distances have been tested only on 24 or 36 group
-	# aggr: 'mild' or 'fierce'
+def plotFleeDist(size, aggr):
+	"""
+	Plots occurences of triadic patterns for different fleeing distances.
+		- size : different flee distances have been tested only on 24 or 36 group size;
+		- aggr : 'mild' or 'fierce'.
+	"""
 	patterns = ['Null','Single-edge','Double-dominant','Double-subordinate','Pass-along','Transitive','Cycle']
 	cols = ['group-size','flee-dist','aggr-intensity','steepness','Null','Single-edge',
 	        'Double-dominant','Double-subordinate','Pass-along','Transitive','Cycle']
@@ -123,8 +133,10 @@ def plotFleeDist(size,aggr):
 	plt.show()
 
 
-def autolabel(axes, rects):
-    """Attach a text label above each bar in *rects*, displaying its height."""
+def _autolabel(axes, rects):
+    """
+	Attach a text label above each bar in *rects*, displaying its height.
+	"""
     for rect in rects:
         height = rect.get_height()
         axes.annotate('{}'.format(height),
@@ -134,9 +146,11 @@ def autolabel(axes, rects):
                     ha='center', va='bottom')
 
 
-# plot occurences of triadic patterns for different group sizes
-def plotFreqPatterns():   
-	# aggr: 'mild' or 'fierce'
+def _plotFreqPatterns():
+	"""
+	Plots occurences of triadic patterns for different group sizes.
+		- aggr : 'mild' or 'fierce'.
+	"""   
 	patterns = ['Null','Single-edge','Double-dominant','Double-subordinate','Pass-along','Transitive','Cycle']
 	cols = ['group-size','flee-dist','aggr-intensity','Null','Single-edge',
 	        'Double-dominant','Double-subordinate','Pass-along','Transitive','Cycle']
@@ -185,8 +199,10 @@ def plotFreqPatterns():
 	plt.show()
 
 
-# plot hierarchy ranking and its steepness
-def plotSignificance(aggr):
+def _plotSignificance(aggr):
+	"""
+	Plots hierarchy ranking and its steepness.
+	"""
 	sizes = ['8', '12', '18', '24', '30', '36', '42', '48']
 	patterns = ['Null','Single-edge','Pass-along','Double-dominant','Double-subordinate','Transitive','Cycle']
 	sp_m = [

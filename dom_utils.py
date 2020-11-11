@@ -8,8 +8,11 @@ import networkx as nx
 from scipy import stats
 from graph_plot import plotHierarchy
 
-# setting domWorld config file
+
 def setDomWorldCfg(filename, params):
+	"""
+	Setting parameters in domWorld config file.
+	"""
 	new_cfg = []
 	with open(filename, 'r') as f:
 		for row in f.readlines():
@@ -29,8 +32,10 @@ def setDomWorldCfg(filename, params):
 	return 
 
 
-# run domWorld model
 def runDomWorldModel(cfg_file):
+	"""
+	Runs DomWorld_Legacy model from python code.
+	"""
 	if platform.system() == 'Windows':
 		os.system('DomWorld_Legacy.exe .\{}'.format(cfg_file))
 	elif platform.system() == 'Linux':
@@ -41,8 +46,10 @@ def runDomWorldModel(cfg_file):
 	return	
 
 
-# unify output files of different runs output filescin f_name file
 def unifyRunsOutput(f_name):
+	"""
+	Unifies output files of different runs in f_name file.
+	"""
 	out_files = []
 	for f in os.listdir('.'):
 		if ('output' in f) and ('.csv' in f) and ('F' not in f):
@@ -61,8 +68,10 @@ def unifyRunsOutput(f_name):
 	return
 
 
-# Reading the number of individuas from the config file
 def individualsNumber(cfg_file):
+	"""
+	Reading the number of individuas from the config file.
+	"""
 	with open(cfg_file) as f:
 		file_content = '[default]\n' + f.read()
 	f.close()
@@ -73,10 +82,12 @@ def individualsNumber(cfg_file):
 	return int(cp['default']['NumFemales']) + int(cp['default']['NumMales'])
 
 
-# calculate the David's Score given the contest matrix.
-# The David's score for an individual i is given by:
-#	DS = w + w_2 - l - l_2 
 def davidsScore(contest_mat):
+	"""
+	Calculate the David's Score given the contest matrix. The David's score 
+	for an individual i is given by:
+		- DS_i = w + w_2 - l - l_2 
+	"""
 	# compute win proportion matrix
 	n_ind = len(contest_mat[0])
 	P_mat = np.zeros((n_ind,n_ind))    # win proportion matrix
@@ -139,8 +150,10 @@ def davidsScore(contest_mat):
 	return d_score
 
 
-# Compute hierarchy steepness as linear fit of the ranked David's scores
 def hierarchySteepness(d_score):
+	"""
+	Computes hierarchy steepness as linear fit of the ranked David's scores.
+	"""
 	# normalize the DS to ensure that steepness varies between 0 and 1  
 	NormDS = []
 	DS = d_score['DS']
@@ -171,9 +184,10 @@ def hierarchySteepness(d_score):
 	return abs(slope)
 
 
-# maps nx.triadic_census() subgraph codes to explicit to 
-# triadic patterns names
 def mapTriadCodes(census, rand_census, triad_cfg):
+	"""
+	Maps nx.triadic_census() subgraph codes to explicit to triadic patterns names.
+	"""
 	real = {}
 	for k,v in sorted(census.items()):
 		if k in triad_cfg:
@@ -191,13 +205,15 @@ def mapTriadCodes(census, rand_census, triad_cfg):
 	return (real, random)
 
 
-# compute the significance profile of the patterns mapped in 
-# triad_cfg, inside directed graph G
 def triadSignificanceProfile(G, triad_cfg):
-	# G: directed graph representing the network 
-	# triads_cfg: dict mapping interesting triadic patterns 
-	#       codes, as in nx.triadic_census(), with explicit names. 
-	# 		(e.g. triad_cfg = {'003' : 'Null', '012' : 'Single-edge'})
+	"""
+	Compute the significance profile of the patterns mapped in triad_cfg, 
+	inside directed graph G.
+		- G          : directed graph representing the network; 
+		- triads_cfg : dict mapping interesting triadic patterns codes, 
+			as in nx.triadic_census(), with explicit names. 
+	  		(e.g. triad_cfg = {'003' : 'Null', '012' : 'Single-edge'})
+	"""
 	census = nx.triadic_census(G)
 	in_degree_sequence = [d for n, d in G.in_degree()]  # in degree sequence
 	out_degree_sequence = [d for n, d in G.out_degree()]  # out degree sequence
