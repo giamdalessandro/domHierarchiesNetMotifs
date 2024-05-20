@@ -1,4 +1,4 @@
-# DomWorld: network motifs and dominance hierachies
+# DomWorld: network motifs and dominance hierarchies
 Final project for the Advanced Self-organization of Social Systems course, Faculty of Science and Engineering, RUG University. In this project we have implemented some popular network motifs analysis techniques to investigate the effect that dominance hierarchies could have on the dominance network structure (in terms of triadic patterns), in a group of individuals.
 
 ## Parameters
